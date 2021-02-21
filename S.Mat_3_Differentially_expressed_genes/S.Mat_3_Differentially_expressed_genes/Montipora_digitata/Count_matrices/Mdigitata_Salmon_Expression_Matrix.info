@@ -1,0 +1,17 @@
+condition,type,experiment,sample_name
+GW39040_1_C1,control,pair-end,E1,GW39040_1_C1
+GW39040_1_C2,control,pair-end,E1,GW39040_1_C2
+GW39040_1_C3,control,pair-end,E1,GW39040_1_C3
+GW39040_2_C1,control,pair-end,E2,GW39040_2_C1
+GW39040_2_C2,control,pair-end,E2,GW39040_2_C2
+GW39040_2_C3,control,pair-end,E2,GW39040_2_C3
+GW39040_1_T25_1,treatment25,pair-end,E1,GW39040_1_T25_1
+GW39040_1_T25_2,treatment25,pair-end,E1,GW39040_1_T25_2
+GW39040_1_T25_3,treatment25,pair-end,E1,GW39040_1_T25_3
+GW39040_2_T25_2,treatment25,pair-end,E2,GW39040_2_T25_2
+GW39040_2_T25_4,treatment25,pair-end,E2,GW39040_2_T25_4
+GW39040_1_T15_1,treatment15,pair-end,E1,GW39040_1_T15_1
+GW39040_1_T15_2,treatment15,pair-end,E1,GW39040_1_T15_2
+GW39040_1_T15_3,treatment15,pair-end,E1,GW39040_1_T15_3
+GW39040_2_T15_3,treatment15,pair-end,E2,GW39040_2_T15_3
+GW39040_2_T15_5,treatment15,pair-end,E2,GW39040_2_T15_5
