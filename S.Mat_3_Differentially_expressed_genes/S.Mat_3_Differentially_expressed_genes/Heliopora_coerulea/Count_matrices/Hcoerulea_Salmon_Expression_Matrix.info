@@ -13,6 +13,6 @@ GW1874_2_T25_2,treatment25,pair-end,E2,GW1874_2_T25_2
 GW1874_2_T25_3,treatment25,pair-end,E2,GW1874_2_T25_3
 GW1874_1_T15_1,treatment15,pair-end,E1,GW1874_1_T15_1
 GW1874_1_T15_2,treatment15,pair-end,E1,GW1874_1_T15_2
-GW1874_2_T15_1,treatment15,pair-end,E1,GW1874_1_T15_1
+GW1874_2_T15_1,treatment15,pair-end,E2,GW1874_1_T15_1
 GW1874_2_T15_2,treatment15,pair-end,E2,GW1874_2_T15_2
 GW1874_2_T15_4,treatment15,pair-end,E2,GW1874_2_T15_4
