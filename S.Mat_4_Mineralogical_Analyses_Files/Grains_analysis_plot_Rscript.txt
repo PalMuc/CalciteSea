@@ -1,0 +1,38 @@
+###R Workflow to generate grain statistics plots
+
+
+#import the table with grains statistics
+grains_table <- read.table("PATH TO TABLE", header=1, sep='\t')
+
+
+#creates the "Minor Axis" Variable by dividing Grain Area by Grain Major Axis
+
+grains_table$Minor <- grains_table$Area / grains_table$Major
+
+
+#Log-transformation of the three variables used for the plots. 
+
+grains_table$Area_Log <- log(grains_table$Area)
+grains_table$Major_Log <- log(grains_table$Major)
+grains_table$Minor_Log <- log(grains_table$Minor)
+
+
+#Produce histogram object for each variable. Area is used as example. Same procedure was used for all three variables and all comparisons
+
+Grain_Area_hist_control <- hist(grains_control$Area_Log, plot=FALSE, breaks=seq( ))
+Grain_Area_hist_treatment <- hist(grains_treatment$Area_Log, plot=FALSE, breaks=seq( ))
+
+
+#Changes the histogram "density" parameter to relative frequency of grain sizes intervals
+
+Grain_Area_hist_control$density <- Grain_Area_hist_control$counts/sum(Grain_Area_hist_control$counts)
+Grain_Area_hist_treatment$density <- Grain_Area_hist_treatment$counts/sum(Grain_Area_hist_treatment$counts)
+
+
+#Plots data points for control sample. Grain Area used as example. Axes ranges and names were modified for each plot if necessary.
+
+plot(Grain_Area_hist_control$$mids, Grain_Area_hist_control$$density, pch=19, col="black",xlab="Grain Area(Log)", ylab="Relative Frequency",main="Grain Area control vs treatment", ylim=c(0,0.12) )
+
+#Adds data for treatment sample to the plot
+
+points(Grain_Area_hist_treatment$mids, Grain_Area_hist_treatment$density, pch=19, col=rgb(1,0.6,0),ylim=c(0,0.12))
