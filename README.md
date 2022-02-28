@@ -4,7 +4,7 @@
 ## Description
 
 This repository contains the supplementary material for the following publication: 
-Conci N., Griesshaber E., Rivera-Vicéns R., Schmahl W., Vargas S. and Wӧrheide G (2022) ** Molecular and mineral responses of corals grown under artificial Calcite Sea conditions ** ADD DETAILS ONCE PREPRINTED
+Conci N., Griesshaber E., Rivera-Vicéns R., Schmahl W., Vargas S. and Wӧrheide G (2022) ** Molecular and mineral responses of corals grown under artificial Calcite Sea conditions. bioRxiv 2022.02.25.481970 DOI:[https://doi.org/10.1101/2022.02.25.481970](https://doi.org/10.1101/2022.02.25.481970)
 
 <br>
 
