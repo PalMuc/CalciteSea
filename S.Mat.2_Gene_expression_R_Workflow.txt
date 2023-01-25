@@ -1,0 +1,186 @@
+
+
+library("EDASeq")
+library("DESeq2")
+library("pheatmap")
+library("ggplot2")
+library("gplots")
+library("geneplotter")
+library("RColorBrewer")
+library("genefilter")
+
+library("BiocParallel")
+register(MulticoreParam(4))
+
+library("dplyr")
+
+
+#Import information of experimental setup
+
+CORAL_INFO<-read.csv("PATH TO SAMPLE INFO FILE", head=T)
+
+# Import counts matrix (metatranscriptome)
+
+metatranscriptome_count_table <- read.table("PATH TO FILE", header = TRUE, sep = '\t')
+
+
+#Import CORAL sequences IDs (determined with psytrans)
+
+CORAL_sequences_ids <- read.table('PATH TO FILE', header=FALSE, sep = '\t')
+
+
+#Obtain the CORAL counts from the metatranscriptome table
+
+CORAL_DE <- subset(metatranscriptome_count_table, rownames(metatranscriptome_count_table) %in% CORAL_sequences_ids$V1)
+
+#make backup of input_table
+
+CORAL_DE_backup <- CORAL_DE
+
+				
+# Check columns names 
+
+
+colnames(CORAL_DE)
+colnames(Symbiont_DE)
+
+
+# Remove genes that have no counts over all samples
+CORAL_DE <- CORAL_DE[(rowSums(CORAL_DE) > 0),]
+
+
+CORAL_DE <- floor(CORAL_DE)
+#Combine sample info with count matrix. 
+CORAL_DESeq<-DESeqDataSetFromMatrix(countData=CORAL_DE, colData=CORAL_DE_INFO, design=~experiment + condition)
+
+
+
+#relevel the factors so that control (mMg:mCa of 5.2) is the reference
+
+CORAL_DESeq$condition<-relevel(CORAL_DESeq$condition,ref="control")
+
+
+#estimate size factors
+#Thus, if all size factors are roughly equal to one, the libraries have been sequenced equally deeply.
+
+CORAL_DESeq<-estimateSizeFactors(CORAL_DESeq)
+
+
+#get rows with all non-zero counts
+non_zero_rows<-apply(counts(CORAL_DESeq), 1, function(x){all(x>0)})
+
+
+#get all rows
+all_rows<-apply(counts(CORAL_DESeq), 1, function(x){all(x>=0)})
+
+
+#number of non-zero rows:
+sum(non_zero_rows)
+
+#number of rows:
+sum(all_rows)
+
+#cummulative distribution of normalized counts for non-zero rows
+multiecdf(counts(CORAL_DESeq, normalized=T)[non_zero_rows, ], xlab="mean counts", xlim=c(0,1000))
+
+
+#density of normalized counts
+multidensity(counts(CORAL_DESeq, normalized=T)[non_zero_rows, ], xlab="mean counts", xlim=c(0,1000))
+
+
+
+#transform the data to rlog
+CORAL_DESeq_rlog<-rlogTransformation(CORAL_DESeq, blind = T)
+
+
+
+#produce a heat plot using the transformed distances
+CORAL_DESeq_distances<-dist(t(assay(CORAL_DESeq_rlog)))
+
+
+heatmap.2(as.matrix(CORAL_DESeq_distances), trace="none", col=rev(colorRampPalette(brewer.pal(9, "GnBu"))(100)))
+
+
+#PCA of samples
+plotPCA(CORAL_DESeq_rlog, intgroup=c("condition"))
+
+
+plotPCA(CORAL_DESeq_rlog, intgroup=c("experiment"))
+
+
+
+
+#heat map of most variable genes
+CORAL_most_variable_genes<-head(order(rowVars(assay(CORAL_DESeq_rlog)), decreasing = T), 750)
+
+
+heatmap.2(assay(CORAL_DESeq)[CORAL_most_variable_genes, ], scale="row", trace = "none", dendrogram = "column", col= colorRampPalette(rev(brewer.pal(9, "RdBu")))(255))
+
+
+
+#
+#Differential expression analysis
+#
+
+
+CORAL_DESeq<-estimateSizeFactors(CORAL_DESeq)
+
+
+CORAL_DESeq<-estimateDispersions(CORAL_DESeq)
+
+
+plotDispEsts(CORAL_DESeq)
+
+#wald test
+CORAL_DESeq<-nbinomWaldTest(CORAL_DESeq)
+CORAL_DESeq_Results<-results(CORAL_DESeq, pAdjustMethod = "BH", contrast=c('condition','control','TREATMENT'))
+
+
+#number of DE genes at 0.01 significance level
+table(CORAL_DESeq_Results$padj < 0.01)
+
+
+#number of DE genes at 0.01 significance level and log fold change > 2
+table(CORAL_DESeq_Results$padj < 0.01 & abs(CORAL_DESeq_Results$log2FoldChange) > 2)
+
+
+#number of overexpressed genes at 0.01 significance level and log fold change > 2
+table(CORAL_DESeq_Results$padj < 0.01 & CORAL_DESeq_Results$log2FoldChange > 2)
+
+
+#number of underexpressed genes at 0.01 significance level and log fold change < -2
+table(CORAL_DESeq_Results$padj < 0.01 & CORAL_DESeq_Results$log2FoldChange < -2)
+
+
+
+#write results matrix to file
+write.csv(CORAL_DESeq_Results, "PATH TO SAVE FILE",quotes=FALSE)
+
+
+
+plotMA(CORAL_DESeq_Results, alpha=0.01)
+
+#get significant genes
+degs_names_CORAL <-rownames(subset(CORAL_DESeq_Results, padj<0.01 & abs(log2FoldChange) > 2))
+write.csv(degs_names_CORAL, "PATH TO SAVE FILE")
+
+
+#get significantly overexpressed in treatment:
+over_deg_names_CORAL<-rownames(subset(CORAL_DESeq_Results, padj<0.01 & log2FoldChange > 2))
+
+
+write.csv(over_deg_names_CORAL, "PATH TO SAVE FILE",quote=FALSE, row.names=FALSE)
+
+
+heatmap.2(log2(counts(CORAL_DESeq, normalized=T)[rownames(CORAL_DESeq) %in% over_deg_names_CORAL, ]+1), scale="row", trace = "none",dendrogram = "column", col= colorRampPalette(rev(brewer.pal(9, "RdBu"))))
+
+
+#get significantly underexpressed in treatment:
+under_deg_names_CORAL <-rownames(subset(CORAL_DESeq_Results, padj<0.01 & log2FoldChange < -2))
+
+
+write.csv(under_deg_names_CORAL, "PATH TO SAVE FILE",row.names=FALSE, quote=FALSE)
+
+
+heatmap.2(log2(counts(CORAL_DESeq, normalized=T)[rownames(CORAL_DESeq) %in% under_deg_names, ]+1), scale="row", trace = "none", dendrogram = "column", col= colorRampPalette(rev(brewer.pal(9, "RdBu"))))
+
