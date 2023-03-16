@@ -1,5 +1,5 @@
 
-# Calcite Sea Study Repository
+# Data for working paper "Molecular and mineral responses of corals grown under artificial Calcite Sea conditions" Conci et al. 2023
 
 ## Description
 
