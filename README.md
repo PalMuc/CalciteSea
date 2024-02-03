@@ -1,10 +1,10 @@
 
-# Data for working paper "Molecular and mineral responses of corals grown under artificial Calcite Sea conditions" Conci et al. 2023
+# Data for "Molecular and mineral responses of corals grown under artificial Calcite Sea conditions" Conci et al. 2024 Geobiology
 
 ## Description
 
 This repository contains the supplementary material for the following publication: 
-Conci N., Griesshaber E., Rivera-Vicéns R., Schmahl W., Vargas S. and Wӧrheide G (2022) Molecular and mineral responses of corals grown under artificial Calcite Sea conditions. bioRxiv 2022.02.25.481970 DOI:[https://doi.org/10.1101/2022.02.25.481970](https://doi.org/10.1101/2022.02.25.481970)
+Conci, N., Griesshaber, E., Rivera-Vicéns, R. E., Schmahl, W. W., Vargas, S., & Wörheide, G. (2024). Molecular and mineral responses of corals grown under artificial Calcite Sea conditions. Geobiology, 22(1), e12586. DOI: [10.1111/gbi.12586](https://onlinelibrary.wiley.com/doi/10.1111/gbi.12586)
 
 <br>
 
